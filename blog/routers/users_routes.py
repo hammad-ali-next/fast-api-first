@@ -21,5 +21,5 @@ def show_single_user(id: int, db: Session = Depends(get_db), current_user: schem
 # =-=-=-= POST =-=-=-= #
 
 @router.post('/', response_model=schemas.ShowUser)
-def create_user(request: schemas.User, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
+def create_user(request: schemas.User, db: Session = Depends(get_db)):
     return users.create_user(request, db)
