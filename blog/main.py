@@ -13,7 +13,7 @@ app = FastAPI()
 @app.get('/')
 def root():
     return {'detail' : {'deploy' : 'successfully', 
-                         'Visit' : '"https://fast-api-first.vercel.app/docs"'}}
+                         'Visit' : 'https://fast-api-first.vercel.app/docs'}}
 
 
 models.Base.metadata.create_all(bind=engine)
