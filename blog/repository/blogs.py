@@ -17,8 +17,9 @@ def show_single_blog(id, db: Session):
     return blog
 
 
-def create_blog(request: schemas.Blog, db: Session):
-    new_blog = models.Blog(title=request.title, body=request.body, user_id=1)
+def create_blog(request: schemas.Blog, db: Session, email: str):
+    new_blog = models.Blog(
+        title=request.title, body=request.body, user_id=get_current_user_id(db, email))
     db.add(new_blog)
     db.commit()
     db.refresh(new_blog)
@@ -43,3 +44,8 @@ def delete_blog(id, db: Session):
     blog.delete(synchronize_session=False)
     db.commit()
     return "Deleted"
+
+
+def get_current_user_id(db, email):
+    user = db.query(models.User).filter(models.User.email == email).first()
+    return user.id

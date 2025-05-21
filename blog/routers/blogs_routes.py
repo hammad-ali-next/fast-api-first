@@ -33,7 +33,7 @@ def show_single_blog(id: int, db: Session = Depends(get_db), current_user: schem
 
 @router.post('/', status_code=status.HTTP_201_CREATED)
 def create_blog(request: schemas.Blog, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
-    return blogs.create_blog(request, db)
+    return blogs.create_blog(request, db, current_user.email)
 
 # =-=-=-= PUT =-=-=-= #
 
