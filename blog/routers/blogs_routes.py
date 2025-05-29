@@ -7,7 +7,7 @@ from ..repository import blogs
 from ..oauth2 import get_current_user
 
 router = APIRouter(
-    prefix='/blog',
+    prefix='/blogs',
     tags=['blogs']
 )
 
