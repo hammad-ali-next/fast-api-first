@@ -19,12 +19,14 @@ router = APIRouter(
 
 
 @router.get('/', status_code=status.HTTP_200_OK, response_model=List[schemas.ShowBlog])
-def show_all_blogs(db: Annotated[Session, Depends(get_db)], current_user: Annotated[schemas.User, Depends(get_current_user)]):
+# , current_user: Annotated[schemas.User, Depends(get_current_user)]):
+def show_all_blogs(db: Annotated[Session, Depends(get_db)]):
     return blogs.show_all_blogs(db)
 
 
 @router.get('/{id}', status_code=status.HTTP_200_OK, response_model=schemas.ShowBlog)
-def show_single_blog(id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
+# , current_user: schemas.User = Depends(get_current_user)):
+def show_single_blog(id: int, db: Session = Depends(get_db)):
     return blogs.show_single_blog(id, db)
 
 
