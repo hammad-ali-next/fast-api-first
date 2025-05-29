@@ -1,6 +1,7 @@
 # main.py
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 from . import models
@@ -9,6 +10,14 @@ from .routers import blogs_routes, users_routes, auth_routes
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],            # Allow any origin
+    allow_credentials=True,
+    allow_methods=["*"],            # Allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],            # Allow all headers
+)
 
 
 @app.get('/')
