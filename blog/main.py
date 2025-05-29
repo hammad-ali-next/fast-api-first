@@ -11,10 +11,15 @@ from .routers import blogs_routes, users_routes, auth_routes
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:3000",  # <-- your frontend origin exactly
+    # add more if needed
+]
+
 # cors added
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],            # Allow any origin
+    allow_origins=origins,            # Allow any origin
     allow_credentials=True,
     allow_methods=["*"],            # Allow all HTTP methods (GET, POST, etc.)
     allow_headers=["*"],            # Allow all headers
