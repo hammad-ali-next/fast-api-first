@@ -13,6 +13,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:3000",  # <-- your frontend origin exactly
+    "http://127.0.0.1:3000"
     # add more if needed
 ]
 

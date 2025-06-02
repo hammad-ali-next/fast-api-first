@@ -6,7 +6,8 @@ from sqlalchemy.orm import Session
 from typing import List
 from ..repository import blogs
 from .. hashing import Hash
-from ..token import create_access_token
+from ..token import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from ..oauth2 import get_current_user
 
 router = APIRouter(
     tags=['Authentication']
@@ -28,10 +29,21 @@ def login(response: Response, request: OAuth2PasswordRequestForm = Depends(), db
         key="access_token",
         value=f"Bearer {access_token}",
         httponly=True,
-        max_age=60*60*24*7,  # cookie lasts 7 days
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,  # cookie lasts 7 days
         path="/",            # cookie valid site-wide
         secure=False,        # True if HTTPS (production)
         samesite="lax"       # helps with CSRF protection
     )
 
     return {"message": "Login successful"}
+
+
+@router.get('/profile', status_code=status.HTTP_200_OK)
+def profile(current_user: schemas.User = Depends(get_current_user)):
+    return current_user.email
+
+
+@router.post("/logout", status_code=status.HTTP_200_OK)
+def logout(response: Response):
+    response.delete_cookie("access_token", path="/")
+    return {"message": "Logged out successfully"}
