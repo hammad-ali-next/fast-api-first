@@ -13,7 +13,8 @@ app = FastAPI()
 
 origins = [
     "http://localhost:3000",  # <-- your frontend origin exactly
-    "http://127.0.0.1:3000"
+    "http://127.0.0.1:3000",
+    "https://my-blog-app.vercel.app/"
     # add more if needed
 ]
 
