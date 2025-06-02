@@ -1,12 +1,24 @@
 # schemas.py
 
+from datetime import datetime
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 
 class Blog(BaseModel):
+    id: int
     title: str
     body: str
+    category: str
+    created_date: datetime
+    image_base64: Optional[str] = None
+
+
+class CreateBlog(BaseModel):
+    title: str
+    body: str
+    category: str
+    image_base64: Optional[str] = None
 
 
 class User(BaseModel):
@@ -42,3 +54,10 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: str | None = None
+
+
+class UpdateBlog(BaseModel):
+    title: Optional[str] = None
+    body: Optional[str] = None
+    category: Optional[str] = None
+    image_base64: Optional[str] = None

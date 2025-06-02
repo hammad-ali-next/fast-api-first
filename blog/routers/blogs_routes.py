@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import APIRouter, Depends, status
 from .. import schemas
 from ..database import get_db
@@ -20,8 +21,11 @@ router = APIRouter(
 
 @router.get('/', status_code=status.HTTP_200_OK, response_model=List[schemas.ShowBlog])
 # , current_user: Annotated[schemas.User, Depends(get_current_user)]):
-def show_all_blogs(db: Annotated[Session, Depends(get_db)]):
-    return blogs.show_all_blogs(db)
+def show_all_blogs(
+        category: Optional[str] = None,
+        db: Session = Depends(get_db)):
+
+    return blogs.show_all_blogs(db, category)
 
 
 @router.get('/{id}', status_code=status.HTTP_200_OK, response_model=schemas.ShowBlog)
@@ -34,16 +38,20 @@ def show_single_blog(id: int, db: Session = Depends(get_db)):
 
 
 @router.post('/', status_code=status.HTTP_201_CREATED)
-def create_blog(request: schemas.Blog, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
+def create_blog(request: schemas.CreateBlog, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
     return blogs.create_blog(request, db, current_user.email)
 
 # =-=-=-= PUT =-=-=-= #
 
 
 @router.put('/{id}', status_code=status.HTTP_202_ACCEPTED)
-def update_blog(id: int, request: schemas.Blog, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
-    return blogs.update_blog(id, request, db)
-
+def update_blog(
+    id: int,
+    request: schemas.UpdateBlog,  # <-- use UpdateBlog schema
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_user),
+):
+    return blogs.blogs_update(id, request, db, current_user)
 
 # =-=-=-= DELETE =-=-=-= #
 

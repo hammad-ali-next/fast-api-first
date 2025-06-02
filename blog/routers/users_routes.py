@@ -7,14 +7,14 @@ from ..oauth2 import get_current_user
 from typing import List
 
 router = APIRouter(
-    prefix='/user',
+    prefix='/users',
     tags=['users']
 )
 
 
 # =-=-=-= GET =-=-=-= #
 
-@router.get('/blogs', status_code=status.HTTP_200_OK, response_model=List[schemas.Blog])
+@router.get('/blogs', status_code=status.HTTP_200_OK, response_model=List[schemas.ShowBlog])
 def get_current_users_blogs(db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
     return users.get_users_blogs(db, current_user.email)
 
@@ -26,6 +26,6 @@ def show_single_user(id: int, db: Session = Depends(get_db), current_user: schem
 
 # =-=-=-= POST =-=-=-= #
 
-@router.post('/', response_model=schemas.ShowUser)
+@router.post('/register', response_model=schemas.ShowUser)
 def create_user(request: schemas.User, db: Session = Depends(get_db)):
     return users.create_user(request, db)
