@@ -24,7 +24,14 @@ def login(response: Response, request: OAuth2PasswordRequestForm = Depends(), db
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Invalid Password!")
     access_token = create_access_token(data={"sub": user.email})
-    response.set_cookie(key="access_token",
-                        value=f"Bearer {access_token}", httponly=True)
+    response.set_cookie(
+        key="access_token",
+        value=f"Bearer {access_token}",
+        httponly=True,
+        max_age=60*60*24*7,  # cookie lasts 7 days
+        path="/",            # cookie valid site-wide
+        secure=False,        # True if HTTPS (production)
+        samesite="lax"       # helps with CSRF protection
+    )
 
     return {"message": "Login successful"}
