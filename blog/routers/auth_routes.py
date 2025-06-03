@@ -31,8 +31,8 @@ def login(response: Response, request: OAuth2PasswordRequestForm = Depends(), db
         httponly=True,
         max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,  # cookie lasts 7 days
         path="/",            # cookie valid site-wide
-        secure=False,        # True if HTTPS (production)
-        samesite="lax"       # helps with CSRF protection
+        secure=True,        # True if HTTPS (production)
+        samesite="none"       # helps with CSRF protection
     )
 
     return {"message": "Login successful"}
