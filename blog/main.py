@@ -15,7 +15,7 @@ origins = [
     "http://localhost:3000",  # <-- your frontend origin exactly
     "http://127.0.0.1:3000",
     # "https://my-blog-app.vercel.app/",
-    "https://my-blog-app-kappa-gold.vercel.app/"
+    "https://my-blog-app-kappa-gold.vercel.app"
     # add more if needed
 ]
 
