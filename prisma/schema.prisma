@@ -1,0 +1,32 @@
+generator client {
+  provider                    = "prisma-client-py"
+  interface                   = "asyncio"
+  recursive_type_depth        = -1
+  enable_experimental_decimal = true
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// data models
+model Blogs {
+  id           Int      @id @default(autoincrement())
+  title        String
+  body         String
+  category     String
+  image_base64 String
+  created_date DateTime @default(now())
+  creator      Users    @relation(fields: [user_id], references: [id])
+  user_id      Int
+}
+
+model Users {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  name     String
+  password String
+  blogs    Blogs[]
+}

@@ -11,14 +11,14 @@ class Blog(BaseModel):
     body: str
     category: str
     created_date: datetime
-    image_base64: Optional[str] = None
+    image_base64: str
 
 
 class CreateBlog(BaseModel):
     title: str
     body: str
     category: str
-    image_base64: Optional[str] = None
+    image_base64: str
 
 
 class User(BaseModel):

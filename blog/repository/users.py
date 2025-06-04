@@ -16,8 +16,8 @@ def show_single_user(id, db: Session):
 def create_user(request: schemas.User, db: Session):
     password = request.password
     if len(password) >= 6 and password.isalnum():
-        new_user = models.User(
-            name=request.name, email=request.email, password=Hash.bcrypt(request.password))
+        new_user = models.User(name=request.name, email=request.email, password=Hash.bcrypt(  # type: ignore
+            request.password))
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
