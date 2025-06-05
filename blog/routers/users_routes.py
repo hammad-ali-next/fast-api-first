@@ -41,9 +41,24 @@ async def get_current_users_blogs(current_user: schemas.User = Depends(get_curre
     return blogss
 
 
+# @router.get('/{id}', status_code=status.HTTP_200_OK, response_model=schemas.ShowUser)
+# def show_single_user(id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
+#     return users.show_single_user(id, db)
+
+
 @router.get('/{id}', status_code=status.HTTP_200_OK, response_model=schemas.ShowUser)
-def show_single_user(id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
-    return users.show_single_user(id, db)
+async def show_single_user(id: int, current_user: schemas.User = Depends(get_current_user)):
+    db = Prisma()
+    await db.connect()
+    user = await db.users.find_first(
+        where={
+            'id': id,
+        },
+        include={
+            'blogs': True
+        }
+    )
+    return user
 
 
 # =-=-=-= POST =-=-=-= #

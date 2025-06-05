@@ -57,7 +57,7 @@ class TokenData(BaseModel):
 
 
 class UpdateBlog(BaseModel):
-    title: Optional[str] = None
-    body: Optional[str] = None
-    category: Optional[str] = None
-    image_base64: Optional[str] = None
+    title: str
+    body: str
+    category: str
+    image_base64: str
