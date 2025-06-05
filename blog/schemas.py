@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List
 
 
 class Blog(BaseModel):
@@ -11,7 +11,7 @@ class Blog(BaseModel):
     body: str
     category: str
     created_date: datetime
-    image_base64: str
+    image_url: str
 
 
 class CreateBlog(BaseModel):

@@ -1,5 +1,5 @@
 from fastapi import Cookie, Depends, HTTPException, status
-from .token import verify_token
+from .auth_token import verify_token
 
 
 def get_token_from_cookie(access_token: str = Cookie(None)):

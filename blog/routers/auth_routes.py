@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from ..repository import blogs
 from .. hashing import Hash
-from ..token import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from ..auth_token import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 from ..oauth2 import get_current_user
 
 router = APIRouter(

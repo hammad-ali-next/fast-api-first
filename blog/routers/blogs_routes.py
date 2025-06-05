@@ -8,6 +8,7 @@ from typing import List, Annotated
 from ..repository import blogs
 from ..oauth2 import get_current_user
 from prisma import Prisma
+# from ..bucket_work import upload_image_to_bucket, delete_image_from_bucket
 
 
 router = APIRouter(
@@ -66,6 +67,7 @@ async def show_single_blog(id: int):
             'creator': True
         }
     )
+
     await db.disconnect()
     return blog
 
