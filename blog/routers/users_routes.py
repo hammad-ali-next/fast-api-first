@@ -26,7 +26,6 @@ router = APIRouter(
 async def get_current_users_blogs(current_user: schemas.User = Depends(get_current_user)):
     db = Prisma()
     user_id = await get_current_user_id(current_user.email)
-    user_id = 3
     await db.connect()
     blogss = await db.blogs.find_many(
         where={

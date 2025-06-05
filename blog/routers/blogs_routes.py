@@ -8,7 +8,7 @@ from typing import List, Annotated
 from ..repository import blogs
 from ..oauth2 import get_current_user
 from prisma import Prisma
-# from ..bucket_work import upload_image_to_bucket, delete_image_from_bucket
+from ..bucket_work import upload_image_to_bucket, delete_image_from_bucket, replace_image_in_bucket
 
 
 router = APIRouter(
@@ -101,11 +101,13 @@ async def create_blog(request: schemas.CreateBlog, current_user: schemas.User = 
     await db.connect()
 
     user_id = await get_current_user_id(current_user.email)
+    image_url = upload_image_to_bucket(
+        current_user.email, request.image_base64)
     new_blog = await db.blogs.create(data={
         'title': request.title,
         'body': request.body,
         'category': request.category,
-        'image_base64': request.image_base64,
+        'image_url': image_url,
         'user_id': user_id
     },)
 
@@ -130,14 +132,28 @@ async def update_blog(
     request: schemas.UpdateBlog,
     current_user: schemas.User = Depends(get_current_user),
 ):
+    user_id = await get_current_user_id(current_user.email)
     db = Prisma()
     await db.connect()
+    blog = await db.blogs.find_first(
+        where={
+            'id': id,
+            'user_id': user_id
+        }
+    )
+    if blog is None:
+        await db.disconnect()
+        raise HTTPException(
+            status_code=404, detail="Blog not found or not authorized")
+
+    new_image_url = replace_image_in_bucket(
+        blog.image_url, current_user.email, request.image_base64)
     updated_blog = await db.blogs.update(
         data={
             'title': request.title,
             'body': request.body,
             'category': request.category,
-            'image_base64': request.image_base64
+            'image_url': new_image_url
         },
         where={
             'id': id
@@ -161,10 +177,22 @@ async def delete_blog(id: int, current_user: schemas.User = Depends(get_current_
     user_id = await get_current_user_id(current_user.email)
     await db.connect()
 
-    result = await db.blogs.delete_many(
+    blog = await db.blogs.find_first(
         where={
             'id': id,
             'user_id': user_id
+        }
+    )
+    if blog is None:
+        await db.disconnect()
+        raise HTTPException(
+            status_code=404, detail="Blog not found or not authorized")
+
+    delete_image_from_bucket(blog.image_url)
+
+    result = await db.blogs.delete(
+        where={
+            'id': id,
         }
     )
 
@@ -172,5 +200,5 @@ async def delete_blog(id: int, current_user: schemas.User = Depends(get_current_
 
     if result is None:
         raise HTTPException(
-            status_code=404, detail="Blog not found or not authorized")
+            status_code=404, detail="Blog not deleted but Image has been deleted")
     return {"message": "Blog deleted successfully"}
